@@ -1,0 +1,99 @@
+@import "tailwindcss";
+
+/* ===========================================================================
+   REPS — "Volt Athletic" theme
+   Near-black gym-floor canvas, electric-lime accent, condensed display type.
+   Fonts (--font-*) are injected at runtime by next/font in layout.tsx.
+   =========================================================================== */
+@theme {
+  /* Surfaces */
+  --color-ink: #0a0a0a;
+  --color-surface: #131313;
+  --color-surface-2: #1b1b1b;
+  --color-line: #2b2b2b;
+
+  /* Type */
+  --color-bone: #f1f1ea;
+  --color-bone-dim: #9b9b90;
+
+  /* Accent */
+  --color-volt: #d7ff3e;
+  --color-volt-dim: #a9c92f;
+  --color-volt-ink: #0a0a0a;
+
+  /* Status */
+  --color-danger: #ff5a5a;
+
+  /* Fonts (variables come from next/font) */
+  --font-display: var(--font-anton), "Arial Narrow", sans-serif;
+  --font-sans: var(--font-hanken), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* Radii — mostly sharp, athletic */
+  --radius-sharp: 2px;
+}
+
+@layer base {
+  * {
+    border-color: var(--color-line);
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-ink);
+    color: var(--color-bone);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    /* Subtle gym-floor grain so the dark canvas has depth, not flatness */
+    background-image:
+      radial-gradient(circle at 12% -10%, rgba(215, 255, 62, 0.08), transparent 45%),
+      radial-gradient(circle at 90% 0%, rgba(215, 255, 62, 0.04), transparent 40%);
+    background-attachment: fixed;
+  }
+
+  ::selection {
+    background-color: var(--color-volt);
+    color: var(--color-volt-ink);
+  }
+
+  /* Tabular figures everywhere mono is used (sets/reps/rest read as data) */
+  .tabular {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum";
+  }
+}
+
+@layer utilities {
+  /* Hairline label, used for eyebrows / section kickers */
+  .kicker {
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.22em;
+    font-size: 0.7rem;
+  }
+
+  .display {
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    line-height: 0.92;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Focus ring — INTENTIONALLY UNLAYERED so it wins over Tailwind's `utilities`
+   layer (unlayered author styles outrank any @layer). Accessibility is a hard
+   requirement, so the volt ring must be visible *immediately*: Tailwind's
+   `transition-colors` includes `outline-color`, which otherwise fades the ring
+   in from currentColor over 150ms. We override `transition-property` on the
+   focused element so the outline appears at once.
+   --------------------------------------------------------------------------- */
+:focus-visible {
+  outline: 2px solid var(--color-volt);
+  outline-offset: 2px;
+  transition-property: color, background-color, border-color, opacity, transform, box-shadow;
+}
+
