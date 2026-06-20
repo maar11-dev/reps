@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { type FormEvent, useId, useState } from "react";
 import { authInputClass } from "@/components/auth/AuthShell";
 import { Button } from "@/components/ui/Button";
@@ -28,7 +27,6 @@ interface AuthFormProps {
  * state instead of redirecting.
  */
 export function AuthForm({ mode, redirectTo }: AuthFormProps) {
-  const router = useRouter();
   const emailId = useId();
   const passwordId = useId();
   const isSignUp = mode === "sign-up";
@@ -59,16 +57,16 @@ export function AuthForm({ mode, redirectTo }: AuthFormProps) {
         if (signUpError) throw signUpError;
         // A session means confirmation is off — we're in. Otherwise prompt for it.
         if (data.session) {
-          router.push(dest);
-          router.refresh();
+          // Full navigation so the session cookie is sent and the server renders
+          // the destination — avoids a client-nav race with the auth middleware.
+          window.location.assign(dest);
         } else {
           setCheckEmail(true);
         }
       } else {
         const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
         if (signInError) throw signInError;
-        router.push(dest);
-        router.refresh();
+        window.location.assign(dest);
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong. Please try again.");

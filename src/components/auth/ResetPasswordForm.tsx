@@ -1,6 +1,5 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { type FormEvent, useId, useState } from "react";
 import { authInputClass } from "@/components/auth/AuthShell";
 import { Button } from "@/components/ui/Button";
@@ -14,7 +13,6 @@ import { createBrowserSupabaseClient } from "@/lib/db/supabase-browser";
  * session. Without one (link expired / opened directly) it surfaces the error.
  */
 export function ResetPasswordForm() {
-  const router = useRouter();
   const passwordId = useId();
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -31,8 +29,7 @@ export function ResetPasswordForm() {
       const { error: updateError } = await supabase.auth.updateUser({ password });
       if (updateError) throw updateError;
       setDone(true);
-      router.push(DEFAULT_SIGNED_IN_PATH);
-      router.refresh();
+      window.location.assign(DEFAULT_SIGNED_IN_PATH);
     } catch (err) {
       setError(
         err instanceof Error

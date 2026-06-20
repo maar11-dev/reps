@@ -9,8 +9,8 @@ export const FORGOT_PASSWORD_PATH = "/forgot-password";
 export const RESET_PASSWORD_PATH = "/reset-password";
 export const AUTH_CALLBACK_PATH = "/auth/callback";
 
-/** Where to land after signing in when no explicit target is given. */
-export const DEFAULT_SIGNED_IN_PATH = "/plans";
+/** Where to land after signing in when no explicit target is given (the home screen). */
+export const DEFAULT_SIGNED_IN_PATH = "/";
 
 /**
  * Route prefixes that require an authenticated user. Generating a plan (`/build`)

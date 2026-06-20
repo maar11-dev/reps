@@ -3,15 +3,9 @@ import userEvent from "@testing-library/user-event";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { AuthForm } from "@/components/auth/AuthForm";
 
-const { pushMock, refreshMock, signInMock, signUpMock } = vi.hoisted(() => ({
-  pushMock: vi.fn(),
-  refreshMock: vi.fn(),
+const { signInMock, signUpMock } = vi.hoisted(() => ({
   signInMock: vi.fn(),
   signUpMock: vi.fn(),
-}));
-
-vi.mock("next/navigation", () => ({
-  useRouter: () => ({ push: pushMock, refresh: refreshMock }),
 }));
 
 vi.mock("@/lib/db/supabase-browser", () => ({
@@ -21,11 +15,18 @@ vi.mock("@/lib/db/supabase-browser", () => ({
   }),
 }));
 
+// AuthForm hard-navigates on success. jsdom's location.assign isn't spy-able, so
+// swap window.location for a plain stub (keeping `origin` for the sign-up flow).
+const assignSpy = vi.fn();
+
 beforeEach(() => {
-  pushMock.mockReset();
-  refreshMock.mockReset();
+  assignSpy.mockReset();
   signInMock.mockReset();
   signUpMock.mockReset();
+  Object.defineProperty(window, "location", {
+    configurable: true,
+    value: { origin: "http://localhost:3000", assign: assignSpy },
+  });
 });
 
 async function fillCredentials(email = "a@b.com", password = "secret123") {
@@ -44,17 +45,17 @@ describe("AuthForm (sign-in)", () => {
     await user.click(screen.getByRole("button", { name: /^sign in$/i }));
 
     expect(signInMock).toHaveBeenCalledWith({ email: "a@b.com", password: "secret123" });
-    expect(pushMock).toHaveBeenCalledWith("/plans");
+    expect(assignSpy).toHaveBeenCalledWith("/plans");
   });
 
-  it("falls back to /plans when redirectTo is unsafe", async () => {
+  it("falls back to the home screen when redirectTo is unsafe", async () => {
     signInMock.mockResolvedValue({ error: null });
     render(<AuthForm mode="sign-in" redirectTo="//evil.com" />);
 
     const user = await fillCredentials();
     await user.click(screen.getByRole("button", { name: /^sign in$/i }));
 
-    expect(pushMock).toHaveBeenCalledWith("/plans");
+    expect(assignSpy).toHaveBeenCalledWith("/");
   });
 
   it("surfaces an accessible error on failure", async () => {
@@ -65,7 +66,7 @@ describe("AuthForm (sign-in)", () => {
     await user.click(screen.getByRole("button", { name: /^sign in$/i }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Invalid login credentials");
-    expect(pushMock).not.toHaveBeenCalled();
+    expect(assignSpy).not.toHaveBeenCalled();
   });
 });
 
@@ -78,7 +79,7 @@ describe("AuthForm (sign-up)", () => {
     await user.click(screen.getByRole("button", { name: /create account/i }));
 
     expect(signUpMock).toHaveBeenCalled();
-    expect(pushMock).toHaveBeenCalledWith("/plans");
+    expect(assignSpy).toHaveBeenCalledWith("/plans");
   });
 
   it("shows a confirm-your-email state when no session is returned", async () => {
@@ -89,6 +90,6 @@ describe("AuthForm (sign-up)", () => {
     await user.click(screen.getByRole("button", { name: /create account/i }));
 
     expect(await screen.findByText(/confirmation link/i)).toBeInTheDocument();
-    expect(pushMock).not.toHaveBeenCalled();
+    expect(assignSpy).not.toHaveBeenCalled();
   });
 });

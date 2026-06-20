@@ -19,6 +19,12 @@ create table if not exists public.saved_plans (
   updated_at       timestamptz not null default now()
 );
 
+-- Table-level privileges. A table created via raw SQL (not the dashboard Table
+-- Editor) does NOT auto-grant the API roles, so grant `authenticated` explicitly.
+-- RLS below still restricts every row to its owner; `anon` needs no access since
+-- saving/listing requires a logged-in user.
+grant select, insert, update, delete on table public.saved_plans to authenticated;
+
 -- Listing is always "my plans, newest first".
 create index if not exists saved_plans_user_created_idx
   on public.saved_plans (user_id, created_at desc);
