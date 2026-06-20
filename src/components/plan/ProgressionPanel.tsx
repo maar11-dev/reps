@@ -4,7 +4,7 @@ export function ProgressionPanel({ progression }: { progression: Progression }) 
   return (
     <section
       aria-labelledby="progression-heading"
-      className="rounded-[var(--radius-sharp)] border border-volt/30 bg-volt/[0.03] p-6"
+      className="rounded-[var(--radius-sharp)] border-2 border-volt/50 bg-volt/[0.04] p-6"
     >
       <p className="kicker text-volt">Progression</p>
       <h3 id="progression-heading" className="display mt-1 text-2xl text-bone">
@@ -24,7 +24,7 @@ export function ProgressionPanel({ progression }: { progression: Progression }) 
       </ol>
 
       {progression.deloadGuidance ? (
-        <p className="mt-5 border-t border-line pt-4 text-sm text-bone-dim">
+        <p className="mt-5 border-t-2 border-line pt-4 text-sm text-bone-dim">
           <span className="font-mono uppercase tracking-widest text-bone">Deload — </span>
           {progression.deloadGuidance}
         </p>

@@ -23,8 +23,8 @@ export function DayCard({ day, onSwap, swappingKey }: DayCardProps) {
         </p>
       </div>
 
-      <div className="rounded-[var(--radius-sharp)] border border-line bg-surface/50 p-4">
-        <p className="kicker text-bone-dim mb-2">Why this day</p>
+      <div className="rounded-[var(--radius-sharp)] border-2 border-line bg-surface p-4">
+        <p className="kicker text-volt mb-2">Why this day</p>
         <p className="text-sm leading-relaxed text-bone">{day.rationale}</p>
       </div>
 
@@ -44,7 +44,7 @@ export function DayCard({ day, onSwap, swappingKey }: DayCardProps) {
         </div>
       ) : null}
 
-      <ol className="flex flex-col divide-y divide-line border-y border-line">
+      <ol className="flex flex-col divide-y-2 divide-line border-y-2 border-line">
         {day.exercises.map((exercise, index) => (
           <ExerciseRow
             key={`${exercise.name}-${exercise.sets}x${exercise.reps}`}
@@ -97,10 +97,10 @@ function ExerciseRow({ exercise, index, onSwap, isSwapping }: ExerciseRowProps) 
             aria-busy={isSwapping}
             aria-label={`Swap ${exercise.name} for an equivalent exercise`}
             className={cn(
-              "inline-flex items-center gap-1.5 self-center rounded-[var(--radius-sharp)] border px-3 py-2",
-              "font-mono text-[0.65rem] uppercase tracking-[0.15em] transition-colors",
-              "border-line text-bone-dim hover:border-volt hover:text-volt",
-              "disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-line disabled:hover:text-bone-dim",
+              "press inline-flex items-center gap-1.5 self-center rounded-[var(--radius-sharp)] border-2 px-3 py-2",
+              "font-mono text-[0.65rem] font-semibold uppercase tracking-[0.15em]",
+              "border-line text-bone-dim hover:border-volt hover:text-volt hover:shadow-[3px_3px_0_0_var(--color-volt)]",
+              "disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-x-0 disabled:hover:translate-y-0 disabled:hover:border-line disabled:hover:text-bone-dim disabled:hover:shadow-none",
             )}
           >
             <span aria-hidden="true">⇄</span>

@@ -81,7 +81,7 @@ export function AuthForm({ mode, redirectTo }: AuthFormProps) {
     return (
       <div
         role="status"
-        className="flex flex-col gap-3 rounded-[var(--radius-sharp)] border border-line bg-surface/50 p-6"
+        className="flex flex-col gap-3 rounded-[var(--radius-sharp)] border-2 border-volt bg-volt/[0.04] p-6"
       >
         <p className="kicker text-volt">Almost there</p>
         <p className="text-bone">
@@ -145,7 +145,7 @@ export function AuthForm({ mode, redirectTo }: AuthFormProps) {
       {error ? (
         <p
           role="alert"
-          className="rounded-[var(--radius-sharp)] border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger"
+          className="rounded-[var(--radius-sharp)] border-2 border-danger bg-danger/10 px-4 py-3 text-sm text-danger"
         >
           {error}
         </p>

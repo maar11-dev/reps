@@ -27,14 +27,14 @@ export function ChipGroup<T extends string>({ options, selected, onToggle }: Chi
             aria-pressed={isOn}
             onClick={() => onToggle(option.value)}
             className={cn(
-              "rounded-[var(--radius-sharp)] border px-4 py-2.5",
-              "font-sans text-sm transition-colors duration-150",
+              "press rounded-[var(--radius-sharp)] border-2 px-4 py-2.5",
+              "font-mono text-sm uppercase tracking-wide",
               isOn
-                ? "border-volt bg-volt/10 text-volt"
-                : "border-line bg-surface text-bone hover:border-bone-dim",
+                ? "border-volt bg-volt/10 text-volt shadow-[3px_3px_0_0_var(--color-volt)]"
+                : "border-line bg-surface text-bone hover:border-volt hover:text-volt",
             )}
           >
-            <span aria-hidden="true" className="mr-2 font-mono">
+            <span aria-hidden="true" className="mr-2 font-bold">
               {isOn ? "✓" : "+"}
             </span>
             {option.label}

@@ -24,9 +24,13 @@ export default function PlansPage() {
       <SiteHeader />
       <main className="mx-auto max-w-5xl px-5 py-12 sm:px-8 sm:py-16">
         <div className="flex flex-col gap-10">
-          <div className="flex flex-col gap-3">
-            <p className="kicker text-volt">Your library</p>
-            <h1 className="display text-4xl text-bone sm:text-6xl">My plans.</h1>
+          <div className="flex flex-col gap-4">
+            <span className="kicker w-fit border-2 border-volt bg-volt/10 px-3 py-1.5 text-volt">
+              Your library
+            </span>
+            <h1 className="display text-5xl text-bone sm:text-7xl">
+              My <span className="text-volt">plans.</span>
+            </h1>
             <p className="max-w-xl text-bone-dim">
               Open a saved plan to train or edit it, or clear out the ones you&apos;re done with.
             </p>

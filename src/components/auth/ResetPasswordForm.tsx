@@ -60,7 +60,7 @@ export function ResetPasswordForm() {
       {error ? (
         <p
           role="alert"
-          className="rounded-[var(--radius-sharp)] border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger"
+          className="rounded-[var(--radius-sharp)] border-2 border-danger bg-danger/10 px-4 py-3 text-sm text-danger"
         >
           {error}
         </p>

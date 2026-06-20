@@ -150,13 +150,16 @@ export function PlanView({ plan, onReset }: PlanViewProps) {
         <h1 className="display text-5xl text-bone sm:text-7xl">{current.title}</h1>
         <p className="max-w-2xl text-lg text-bone-dim">{current.summary}</p>
 
-        <div className="max-w-2xl rounded-[var(--radius-sharp)] border-l-2 border-volt bg-surface/50 px-5 py-4">
+        <div className="max-w-2xl border-2 border-volt bg-surface px-5 py-4 shadow-[6px_6px_0_0_var(--color-volt)]">
           <p className="kicker text-volt mb-2">The strategy</p>
           <p className="text-sm leading-relaxed text-bone">{current.rationale}</p>
         </div>
 
         {actionError ? (
-          <p role="alert" className="text-sm text-danger">
+          <p
+            role="alert"
+            className="border-2 border-danger bg-danger/10 px-4 py-2 font-mono text-sm text-danger"
+          >
             {actionError}
           </p>
         ) : null}
@@ -167,7 +170,7 @@ export function PlanView({ plan, onReset }: PlanViewProps) {
         <div
           role="tablist"
           aria-label="Training days"
-          className="flex flex-wrap gap-2 border-b border-line pb-4"
+          className="flex flex-wrap gap-2 border-b-2 border-line pb-4"
         >
           {current.days.map((day, index) => {
             const selected = index === active;
@@ -186,10 +189,10 @@ export function PlanView({ plan, onReset }: PlanViewProps) {
                 onClick={() => setActive(index)}
                 onKeyDown={onTabKeyDown}
                 className={cn(
-                  "rounded-[var(--radius-sharp)] border px-4 py-2 text-left transition-colors",
+                  "press rounded-[var(--radius-sharp)] border-2 px-4 py-2 text-left",
                   selected
-                    ? "border-volt bg-volt text-volt-ink"
-                    : "border-line bg-surface text-bone-dim hover:border-bone-dim hover:text-bone",
+                    ? "border-volt-ink bg-volt text-volt-ink shadow-[4px_4px_0_0_var(--color-bone)]"
+                    : "border-line bg-surface text-bone-dim hover:border-volt hover:text-bone",
                 )}
               >
                 <span className="block font-mono text-[0.6rem] uppercase tracking-widest opacity-80">
@@ -229,7 +232,7 @@ export function PlanView({ plan, onReset }: PlanViewProps) {
 
 function Tag({ children }: { children: React.ReactNode }) {
   return (
-    <span className="rounded-[var(--radius-sharp)] border border-line bg-surface px-3 py-1 font-mono text-xs uppercase tracking-widest text-bone-dim">
+    <span className="rounded-[var(--radius-sharp)] border-2 border-line bg-surface px-3 py-1 font-mono text-xs font-semibold uppercase tracking-widest text-bone">
       {children}
     </span>
   );

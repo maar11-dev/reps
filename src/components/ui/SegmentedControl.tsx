@@ -31,12 +31,12 @@ export function SegmentedControl<T extends string>({
           <label
             key={option.value}
             className={cn(
-              "cursor-pointer select-none rounded-[var(--radius-sharp)] border px-4 py-2.5",
-              "font-sans text-sm transition-colors duration-150",
+              "press cursor-pointer select-none rounded-[var(--radius-sharp)] border-2 px-4 py-2.5",
+              "font-mono text-sm uppercase tracking-wide",
               "has-[:focus-visible]:outline has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-volt has-[:focus-visible]:outline-offset-2",
               checked
-                ? "border-volt bg-volt text-volt-ink font-semibold"
-                : "border-line bg-surface text-bone hover:border-bone-dim",
+                ? "border-volt-ink bg-volt font-bold text-volt-ink shadow-[3px_3px_0_0_var(--color-bone)]"
+                : "border-line bg-surface text-bone hover:border-volt hover:text-volt",
             )}
           >
             <input

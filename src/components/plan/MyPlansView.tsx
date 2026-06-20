@@ -80,11 +80,11 @@ export function MyPlansView({ onOpen }: MyPlansViewProps) {
 
   if (savedPlans.length === 0) {
     return (
-      <div className="flex flex-col items-start gap-4 rounded-[var(--radius-sharp)] border border-line bg-surface/50 p-8">
-        <p className="text-bone-dim">You haven&apos;t saved any plans yet.</p>
+      <div className="flex flex-col items-start gap-4 rounded-[var(--radius-sharp)] border-2 border-dashed border-line bg-surface/50 p-10">
+        <p className="display text-2xl text-bone">You haven&apos;t saved any plans yet.</p>
         <Link
           href="/build"
-          className="font-mono text-xs uppercase tracking-widest text-volt hover:underline"
+          className="press inline-flex items-center border-2 border-volt-ink bg-volt px-5 py-2.5 font-mono text-xs font-semibold uppercase tracking-widest text-volt-ink shadow-[4px_4px_0_0_var(--color-bone)]"
         >
           Build your first plan →
         </Link>
@@ -107,7 +107,7 @@ export function MyPlansView({ onOpen }: MyPlansViewProps) {
           return (
             <li
               key={saved.id}
-              className="flex flex-col gap-4 rounded-[var(--radius-sharp)] border border-line bg-surface p-5 sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-4 rounded-[var(--radius-sharp)] border-2 border-line bg-surface p-5 transition-colors hover:border-volt sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="flex flex-col gap-2">
                 <h2 className="display text-2xl text-bone">{saved.plan.title}</h2>
@@ -133,9 +133,9 @@ export function MyPlansView({ onOpen }: MyPlansViewProps) {
                       disabled={deleting}
                       aria-busy={deleting}
                       className={cn(
-                        "rounded-[var(--radius-sharp)] border border-danger px-3 py-2",
-                        "font-mono text-[0.65rem] uppercase tracking-[0.15em] text-danger transition-colors",
-                        "hover:bg-danger hover:text-ink disabled:cursor-not-allowed disabled:opacity-60",
+                        "press rounded-[var(--radius-sharp)] border-2 border-danger px-3 py-2",
+                        "font-mono text-[0.65rem] font-semibold uppercase tracking-[0.15em] text-danger",
+                        "hover:bg-danger hover:text-ink hover:shadow-[3px_3px_0_0_var(--color-bone)] disabled:cursor-not-allowed disabled:opacity-60",
                       )}
                     >
                       {deleting ? "Deleting…" : "Yes, delete"}
@@ -144,7 +144,7 @@ export function MyPlansView({ onOpen }: MyPlansViewProps) {
                       type="button"
                       onClick={() => setConfirmingId(null)}
                       disabled={deleting}
-                      className="rounded-[var(--radius-sharp)] border border-line px-3 py-2 font-mono text-[0.65rem] uppercase tracking-[0.15em] text-bone-dim transition-colors hover:border-bone-dim hover:text-bone"
+                      className="press rounded-[var(--radius-sharp)] border-2 border-line px-3 py-2 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.15em] text-bone-dim hover:border-bone hover:text-bone"
                     >
                       Cancel
                     </button>
@@ -158,7 +158,7 @@ export function MyPlansView({ onOpen }: MyPlansViewProps) {
                       type="button"
                       onClick={() => setConfirmingId(saved.id)}
                       aria-label={`Delete ${saved.plan.title}`}
-                      className="rounded-[var(--radius-sharp)] border border-line px-3 py-2 font-mono text-[0.65rem] uppercase tracking-[0.15em] text-bone-dim transition-colors hover:border-danger hover:text-danger"
+                      className="press rounded-[var(--radius-sharp)] border-2 border-line px-3 py-2 font-mono text-[0.65rem] font-semibold uppercase tracking-[0.15em] text-bone-dim hover:border-danger hover:text-danger hover:shadow-[3px_3px_0_0_var(--color-danger)]"
                     >
                       Delete
                     </button>
@@ -175,7 +175,7 @@ export function MyPlansView({ onOpen }: MyPlansViewProps) {
 
 function Tag({ children }: { children: React.ReactNode }) {
   return (
-    <span className="rounded-[var(--radius-sharp)] border border-line bg-ink px-2.5 py-1 font-mono text-[0.65rem] uppercase tracking-widest text-bone-dim">
+    <span className="rounded-[var(--radius-sharp)] border-2 border-line bg-ink px-2.5 py-1 font-mono text-[0.65rem] font-semibold uppercase tracking-widest text-bone">
       {children}
     </span>
   );

@@ -49,10 +49,12 @@ export default function BuildPage() {
           <PlanView onReset={() => resetDraft()} />
         ) : (
           <div className="flex flex-col gap-10">
-            <div className="flex flex-col gap-3">
-              <p className="kicker text-volt">Plan builder</p>
-              <h1 className="display text-4xl text-bone sm:text-6xl">
-                Let&apos;s build your week.
+            <div className="flex flex-col gap-4">
+              <span className="kicker w-fit border-2 border-volt bg-volt/10 px-3 py-1.5 text-volt">
+                Plan builder
+              </span>
+              <h1 className="display text-5xl text-bone sm:text-7xl">
+                Let&apos;s build your <span className="text-volt">week.</span>
               </h1>
               <p className="max-w-xl text-bone-dim">
                 Four quick choices and Reps drafts a structured program you can train from today.

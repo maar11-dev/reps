@@ -3,7 +3,7 @@ import { SiteHeader } from "@/components/SiteHeader";
 
 /** Shared input styling for the auth forms (mirrors the builder's text inputs). */
 export const authInputClass =
-  "w-full rounded-[var(--radius-sharp)] border border-line bg-surface px-4 py-3 font-sans text-sm text-bone placeholder:text-bone-dim/60 focus-visible:border-volt";
+  "w-full rounded-[var(--radius-sharp)] border-2 border-line bg-surface px-4 py-3 font-sans text-sm text-bone placeholder:text-bone-dim/60 focus-visible:border-volt";
 
 /** Centered page chrome for the auth screens. Server-compatible (no client code). */
 export function AuthShell({
@@ -20,13 +20,17 @@ export function AuthShell({
   return (
     <>
       <SiteHeader />
-      <main className="mx-auto flex max-w-md flex-col gap-8 px-5 py-16 sm:px-8 sm:py-24">
+      <main className="mx-auto flex max-w-md flex-col gap-7 px-5 py-16 sm:px-8 sm:py-24">
         <div className="flex flex-col gap-3">
-          <p className="kicker text-volt">{kicker}</p>
-          <h1 className="display text-4xl text-bone sm:text-5xl">{title}</h1>
+          <span className="kicker w-fit border-2 border-volt bg-volt/10 px-3 py-1.5 text-volt">
+            {kicker}
+          </span>
+          <h1 className="display text-5xl text-bone sm:text-6xl">{title}</h1>
           {subtitle ? <p className="text-bone-dim">{subtitle}</p> : null}
         </div>
-        {children}
+        <div className="border-2 border-line bg-surface/40 p-6 shadow-[8px_8px_0_0_var(--color-line)] sm:p-7">
+          {children}
+        </div>
       </main>
     </>
   );

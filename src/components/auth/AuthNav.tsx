@@ -84,14 +84,14 @@ export function AuthNav() {
     <div className="flex items-center gap-3">
       <span
         title={account.email}
-        className="hidden max-w-[12rem] truncate font-mono text-xs text-bone-dim sm:inline"
+        className="hidden max-w-[12rem] truncate border-2 border-line px-2 py-1 font-mono text-xs text-bone sm:inline"
       >
         {account.label}
       </span>
       <button
         type="button"
         onClick={handleSignOut}
-        className="rounded-[var(--radius-sharp)] border border-line px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-bone-dim transition-colors hover:border-volt hover:text-volt"
+        className="press border-2 border-line px-3 py-1.5 font-mono text-xs uppercase tracking-widest text-bone-dim hover:border-volt hover:text-volt hover:shadow-[3px_3px_0_0_var(--color-volt)]"
       >
         Sign out
       </button>

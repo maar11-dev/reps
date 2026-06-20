@@ -129,14 +129,14 @@ export function BuilderForm({ onSubmit, isSubmitting = false, submitError }: Bui
           maxLength={500}
           rows={3}
           placeholder="e.g. dodgy left shoulder, prefer free weights…"
-          className="w-full resize-y rounded-[var(--radius-sharp)] border border-line bg-surface px-4 py-3 font-sans text-sm text-bone placeholder:text-bone-dim/60 focus-visible:border-volt"
+          className="w-full resize-y rounded-[var(--radius-sharp)] border-2 border-line bg-surface px-4 py-3 font-sans text-sm text-bone placeholder:text-bone-dim/60 focus-visible:border-volt"
         />
       </Field>
 
       {submitError ? (
         <p
           role="alert"
-          className="rounded-[var(--radius-sharp)] border border-danger/40 bg-danger/10 px-4 py-3 text-sm text-danger"
+          className="rounded-[var(--radius-sharp)] border-2 border-danger bg-danger/10 px-4 py-3 font-mono text-sm text-danger shadow-[4px_4px_0_0_var(--color-danger)]"
         >
           {submitError}
         </p>

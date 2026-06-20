@@ -19,7 +19,7 @@ export function Stepper({ value, min, max, onChange, unit, ...rest }: StepperPro
   return (
     // biome-ignore lint/a11y/useSemanticElements: a labelled group of stepper buttons; a fieldset would be redundant inside the parent Field's fieldset
     <div
-      className="inline-flex items-stretch rounded-[var(--radius-sharp)] border border-line bg-surface"
+      className="inline-flex items-stretch rounded-[var(--radius-sharp)] border-2 border-line bg-surface shadow-[4px_4px_0_0_var(--color-line)]"
       role="group"
       aria-label={rest["aria-label"]}
     >
@@ -30,7 +30,7 @@ export function Stepper({ value, min, max, onChange, unit, ...rest }: StepperPro
       >
         −
       </StepButton>
-      <div className="flex min-w-24 items-baseline justify-center gap-1.5 border-x border-line px-5">
+      <div className="flex min-w-24 items-baseline justify-center gap-1.5 border-x-2 border-line px-5">
         <span aria-live="polite" className="display tabular text-4xl text-volt leading-none py-2">
           {value}
         </span>
