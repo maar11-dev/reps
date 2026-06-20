@@ -1,8 +1,8 @@
 import "server-only";
 
 import { GOAL_LABELS, LEVEL_LABELS } from "@/lib/ai/labels";
+import { isAvailable, LIBRARY, type Pattern, pickEquipment } from "@/lib/ai/library";
 import type {
-  Equipment,
   Exercise,
   GeneratePlanInput,
   Goal,
@@ -19,150 +19,9 @@ import type {
  * UI can be exercised without spending real LLM calls. It honours the input:
  * the right number of days, exercises selectable with the available equipment,
  * and goal/level-appropriate sets / reps / rest. Keeping it deterministic also
- * makes it trivial to assert on in tests.
+ * makes it trivial to assert on in tests. The exercise catalogue + equipment
+ * helpers live in `library.ts` so the swap endpoint can reuse them.
  */
-
-type Pattern = "push" | "pull" | "legs" | "core" | "conditioning";
-
-interface ExerciseTemplate {
-  name: string;
-  targetMuscles: string[];
-  pattern: Pattern;
-  /** Any one of these satisfies the exercise. `bodyweight` items are universal. */
-  equipment: Equipment[];
-  cue?: string;
-}
-
-const LIBRARY: ExerciseTemplate[] = [
-  // Push
-  {
-    name: "Barbell Bench Press",
-    targetMuscles: ["Chest", "Triceps", "Front Delts"],
-    pattern: "push",
-    equipment: ["barbell", "full_gym"],
-    cue: "Pin the shoulder blades; bar to mid-chest.",
-  },
-  {
-    name: "Dumbbell Shoulder Press",
-    targetMuscles: ["Shoulders", "Triceps"],
-    pattern: "push",
-    equipment: ["dumbbells", "full_gym"],
-    cue: "Stack wrists over elbows.",
-  },
-  {
-    name: "Machine Chest Press",
-    targetMuscles: ["Chest", "Triceps"],
-    pattern: "push",
-    equipment: ["machines", "full_gym"],
-  },
-  {
-    name: "Push-up",
-    targetMuscles: ["Chest", "Triceps", "Core"],
-    pattern: "push",
-    equipment: ["bodyweight"],
-    cue: "Body in one straight line, elbows ~45°.",
-  },
-  {
-    name: "Band Overhead Press",
-    targetMuscles: ["Shoulders", "Triceps"],
-    pattern: "push",
-    equipment: ["resistance_bands"],
-  },
-  // Pull
-  {
-    name: "Barbell Bent-over Row",
-    targetMuscles: ["Back", "Biceps"],
-    pattern: "pull",
-    equipment: ["barbell", "full_gym"],
-    cue: "Hinge ~45°, drive elbows to hips.",
-  },
-  {
-    name: "Pull-up",
-    targetMuscles: ["Lats", "Biceps"],
-    pattern: "pull",
-    equipment: ["pull_up_bar", "full_gym"],
-    cue: "Lead with the chest, full hang at the bottom.",
-  },
-  {
-    name: "Dumbbell Row",
-    targetMuscles: ["Back", "Biceps"],
-    pattern: "pull",
-    equipment: ["dumbbells", "full_gym"],
-  },
-  {
-    name: "Band Pull-apart",
-    targetMuscles: ["Rear Delts", "Upper Back"],
-    pattern: "pull",
-    equipment: ["resistance_bands"],
-  },
-  {
-    name: "Inverted Row",
-    targetMuscles: ["Back", "Biceps"],
-    pattern: "pull",
-    equipment: ["bodyweight"],
-  },
-  // Legs
-  {
-    name: "Barbell Back Squat",
-    targetMuscles: ["Quads", "Glutes"],
-    pattern: "legs",
-    equipment: ["barbell", "full_gym"],
-    cue: "Brace hard, sit between the hips.",
-  },
-  {
-    name: "Goblet Squat",
-    targetMuscles: ["Quads", "Glutes"],
-    pattern: "legs",
-    equipment: ["dumbbells", "kettlebell", "full_gym"],
-  },
-  {
-    name: "Kettlebell Swing",
-    targetMuscles: ["Hamstrings", "Glutes"],
-    pattern: "legs",
-    equipment: ["kettlebell", "full_gym"],
-    cue: "Snap the hips; the arms just follow.",
-  },
-  {
-    name: "Romanian Deadlift",
-    targetMuscles: ["Hamstrings", "Glutes"],
-    pattern: "legs",
-    equipment: ["barbell", "dumbbells", "full_gym"],
-  },
-  {
-    name: "Bodyweight Split Squat",
-    targetMuscles: ["Quads", "Glutes"],
-    pattern: "legs",
-    equipment: ["bodyweight"],
-  },
-  // Core
-  {
-    name: "Plank",
-    targetMuscles: ["Core"],
-    pattern: "core",
-    equipment: ["bodyweight"],
-    cue: "Squeeze glutes; ribs down.",
-  },
-  {
-    name: "Hanging Knee Raise",
-    targetMuscles: ["Abs", "Hip Flexors"],
-    pattern: "core",
-    equipment: ["pull_up_bar", "full_gym"],
-  },
-  { name: "Dead Bug", targetMuscles: ["Core"], pattern: "core", equipment: ["bodyweight"] },
-  // Conditioning
-  {
-    name: "Burpee Intervals",
-    targetMuscles: ["Full Body"],
-    pattern: "conditioning",
-    equipment: ["bodyweight"],
-  },
-  {
-    name: "Kettlebell Complex",
-    targetMuscles: ["Full Body"],
-    pattern: "conditioning",
-    equipment: ["kettlebell", "full_gym"],
-  },
-];
 
 /** A day's focus expressed as the title + the movement patterns it draws from. */
 interface DayBlueprint {
@@ -246,23 +105,6 @@ function prescriptionFor(goal: Goal, level: Level): Prescription {
   if (level === "beginner") p.sets = Math.max(2, p.sets - 1);
   if (level === "advanced") p.sets = Math.min(6, p.sets + 1);
   return p;
-}
-
-/** Resolve which template equipment to display for the available kit. */
-function pickEquipment(template: ExerciseTemplate, available: Equipment[]): Equipment[] {
-  if (available.includes("full_gym")) {
-    const real = template.equipment.find((e) => e !== "full_gym");
-    return [real ?? template.equipment[0]];
-  }
-  const match = template.equipment.find((e) => available.includes(e));
-  if (match) return [match];
-  return ["bodyweight"]; // fallback variant
-}
-
-function isAvailable(template: ExerciseTemplate, available: Equipment[]): boolean {
-  if (template.equipment.includes("bodyweight")) return true; // always doable
-  if (available.includes("full_gym")) return true;
-  return template.equipment.some((e) => available.includes(e));
 }
 
 function buildDay(

@@ -1,7 +1,16 @@
 import { formatRest } from "@/lib/ai/labels";
 import type { Exercise, WorkoutDay } from "@/lib/ai/schema";
+import { cn } from "@/lib/utils";
 
-export function DayCard({ day }: { day: WorkoutDay }) {
+interface DayCardProps {
+  day: WorkoutDay;
+  /** When provided, each exercise shows a "Swap" control. `position` is 0-based. */
+  onSwap?: (dayNumber: number, position: number, exercise: Exercise) => void;
+  /** `${dayNumber}:${position}` of the exercise currently being swapped, if any. */
+  swappingKey?: string | null;
+}
+
+export function DayCard({ day, onSwap, swappingKey }: DayCardProps) {
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
@@ -41,6 +50,8 @@ export function DayCard({ day }: { day: WorkoutDay }) {
             key={`${exercise.name}-${exercise.sets}x${exercise.reps}`}
             exercise={exercise}
             index={index + 1}
+            onSwap={onSwap ? () => onSwap(day.dayNumber, index, exercise) : undefined}
+            isSwapping={swappingKey === `${day.dayNumber}:${index}`}
           />
         ))}
       </ol>
@@ -48,7 +59,14 @@ export function DayCard({ day }: { day: WorkoutDay }) {
   );
 }
 
-function ExerciseRow({ exercise, index }: { exercise: Exercise; index: number }) {
+interface ExerciseRowProps {
+  exercise: Exercise;
+  index: number;
+  onSwap?: () => void;
+  isSwapping?: boolean;
+}
+
+function ExerciseRow({ exercise, index, onSwap, isSwapping }: ExerciseRowProps) {
   return (
     <li className="flex flex-col gap-3 py-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
       <div className="flex gap-4">
@@ -64,11 +82,32 @@ function ExerciseRow({ exercise, index }: { exercise: Exercise; index: number })
         </div>
       </div>
 
-      <dl className="flex shrink-0 gap-5 font-mono tabular sm:gap-6">
-        <Metric label="Sets×Reps" value={`${exercise.sets}×${exercise.reps}`} />
-        <Metric label="Rest" value={formatRest(exercise.restSeconds)} />
-        {exercise.rpe ? <Metric label="Intensity" value={exercise.rpe} /> : null}
-      </dl>
+      <div className="flex shrink-0 items-start gap-5 sm:gap-6">
+        <dl className="flex gap-5 font-mono tabular sm:gap-6">
+          <Metric label="Sets×Reps" value={`${exercise.sets}×${exercise.reps}`} />
+          <Metric label="Rest" value={formatRest(exercise.restSeconds)} />
+          {exercise.rpe ? <Metric label="Intensity" value={exercise.rpe} /> : null}
+        </dl>
+
+        {onSwap ? (
+          <button
+            type="button"
+            onClick={onSwap}
+            disabled={isSwapping}
+            aria-busy={isSwapping}
+            aria-label={`Swap ${exercise.name} for an equivalent exercise`}
+            className={cn(
+              "inline-flex items-center gap-1.5 self-center rounded-[var(--radius-sharp)] border px-3 py-2",
+              "font-mono text-[0.65rem] uppercase tracking-[0.15em] transition-colors",
+              "border-line text-bone-dim hover:border-volt hover:text-volt",
+              "disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:border-line disabled:hover:text-bone-dim",
+            )}
+          >
+            <span aria-hidden="true">⇄</span>
+            {isSwapping ? "Swapping…" : "Swap"}
+          </button>
+        ) : null}
+      </div>
     </li>
   );
 }

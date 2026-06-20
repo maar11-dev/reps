@@ -72,6 +72,25 @@ export const exerciseSchema = z.object({
   cue: z.string().optional().describe("One short form / technique cue"),
 });
 
+// ---------------------------------------------------------------------------
+// SWAP — ask the model for an equivalent substitute for a single exercise.
+// Input is validated at the API boundary; the OUTPUT reuses `exerciseSchema`
+// above, so a swapped exercise is the exact same shape the plan already renders.
+// ---------------------------------------------------------------------------
+export const swapExerciseInputSchema = z.object({
+  current: exerciseSchema.describe("The exercise to replace"),
+  availableEquipment: z.array(equipmentSchema).min(1).describe("Equipment the athlete has"),
+  goal: goalSchema,
+  experienceLevel: levelSchema,
+  dayFocus: z.array(z.string()).describe("Muscle groups / themes of the day, to stay on-target"),
+  avoid: z
+    .array(z.string())
+    .optional()
+    .describe("Exercise names already in the day, to avoid duplicates"),
+});
+
+export type SwapExerciseInput = z.infer<typeof swapExerciseInputSchema>;
+
 export const workoutDaySchema = z.object({
   dayNumber: z.number().int().min(1).describe("1-based index within the week"),
   title: z.string().describe("Short session title, e.g. 'Upper Body — Push'"),

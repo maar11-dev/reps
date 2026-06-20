@@ -1,5 +1,5 @@
 import { EQUIPMENT_LABELS, GOAL_LABELS, LEVEL_LABELS } from "@/lib/ai/labels";
-import type { GeneratePlanInput } from "@/lib/ai/schema";
+import type { GeneratePlanInput, SwapExerciseInput } from "@/lib/ai/schema";
 
 /**
  * Prompt builders for the workout-plan generation.
@@ -39,6 +39,37 @@ export function buildUserPrompt(input: GeneratePlanInput): string {
   lines.push(
     "",
     `Design a ${input.daysPerWeek}-day weekly plan tailored to the above. Explain your reasoning.`,
+  );
+  return lines.join("\n");
+}
+
+export const SWAP_SYSTEM_PROMPT = `You are a certified strength & conditioning coach suggesting a single substitute exercise.
+
+Rules:
+- Return ONE exercise that targets the SAME primary muscle group(s) as the one being replaced — a true equivalent, not a different movement.
+- Use ONLY the athlete's available equipment. Never prescribe equipment they don't have.
+- Match the training stimulus to the athlete's goal and experience level (sets / reps / rest / intensity in the same ballpark as the original).
+- Do NOT return the same exercise, and avoid any names the athlete is already doing that day.
+- Include a short form cue. Return ONLY data that matches the provided schema.`;
+
+export function buildSwapPrompt(input: SwapExerciseInput): string {
+  const equipment = input.availableEquipment.map((e) => EQUIPMENT_LABELS[e]).join(", ");
+  const lines = [
+    `Replace this exercise: ${input.current.name}`,
+    `It targets: ${input.current.targetMuscles.join(", ")}`,
+    `Current prescription: ${input.current.sets} sets × ${input.current.reps}, ${input.current.restSeconds}s rest`,
+    "",
+    `Goal: ${GOAL_LABELS[input.goal]}`,
+    `Experience level: ${LEVEL_LABELS[input.experienceLevel]}`,
+    `Available equipment: ${equipment}`,
+    `Day focus: ${input.dayFocus.join(", ")}`,
+  ];
+  if (input.avoid?.length) {
+    lines.push(`Already in this day (do not repeat): ${input.avoid.join(", ")}`);
+  }
+  lines.push(
+    "",
+    "Suggest one equivalent substitute that hits the same muscles with the available equipment.",
   );
   return lines.join("\n");
 }
