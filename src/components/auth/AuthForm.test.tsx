@@ -71,14 +71,23 @@ describe("AuthForm (sign-in)", () => {
 });
 
 describe("AuthForm (sign-up)", () => {
-  it("redirects immediately when a session is returned (confirmation off)", async () => {
+  it("sends the display name as user metadata and redirects on an active session", async () => {
     signUpMock.mockResolvedValue({ data: { session: { access_token: "x" } }, error: null });
     render(<AuthForm mode="sign-up" redirectTo="/plans" />);
 
-    const user = await fillCredentials();
+    const user = userEvent.setup();
+    await user.type(screen.getByLabelText("Name"), "Alex");
+    await user.type(screen.getByLabelText("Email"), "a@b.com");
+    await user.type(screen.getByLabelText("Password"), "secret123");
     await user.click(screen.getByRole("button", { name: /create account/i }));
 
-    expect(signUpMock).toHaveBeenCalled();
+    expect(signUpMock).toHaveBeenCalledWith(
+      expect.objectContaining({
+        email: "a@b.com",
+        password: "secret123",
+        options: expect.objectContaining({ data: { display_name: "Alex" } }),
+      }),
+    );
     expect(assignSpy).toHaveBeenCalledWith("/plans");
   });
 

@@ -27,10 +27,12 @@ interface AuthFormProps {
  * state instead of redirecting.
  */
 export function AuthForm({ mode, redirectTo }: AuthFormProps) {
+  const nameId = useId();
   const emailId = useId();
   const passwordId = useId();
   const isSignUp = mode === "sign-up";
 
+  const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -52,7 +54,7 @@ export function AuthForm({ mode, redirectTo }: AuthFormProps) {
         const { data, error: signUpError } = await supabase.auth.signUp({
           email,
           password,
-          options: { emailRedirectTo },
+          options: { emailRedirectTo, data: { display_name: name.trim() } },
         });
         if (signUpError) throw signUpError;
         // A session means confirmation is off — we're in. Otherwise prompt for it.
@@ -98,6 +100,21 @@ export function AuthForm({ mode, redirectTo }: AuthFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6" noValidate>
+      {isSignUp ? (
+        <Field label="Name" htmlFor={nameId}>
+          <input
+            id={nameId}
+            type="text"
+            autoComplete="name"
+            required
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="What should we call you?"
+            className={authInputClass}
+          />
+        </Field>
+      ) : null}
+
       <Field label="Email" htmlFor={emailId}>
         <input
           id={emailId}

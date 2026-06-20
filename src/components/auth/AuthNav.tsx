@@ -15,10 +15,29 @@ import {
  * after login/logout without a full reload. Renders nothing when Supabase isn't
  * configured (dev/mock mode), where there's no real session.
  */
+interface Account {
+  /** Display name if set at sign-up, otherwise the email. */
+  label: string;
+  email: string;
+}
+
+/** Prefer the user's chosen display name, falling back to their email. */
+function toAccount(
+  user: { email?: string; user_metadata?: Record<string, unknown> } | null,
+): Account | null {
+  if (!user) return null;
+  const email = user.email ?? "";
+  const name =
+    typeof user.user_metadata?.display_name === "string"
+      ? user.user_metadata.display_name.trim()
+      : "";
+  return { label: name || email, email };
+}
+
 export function AuthNav() {
   const router = useRouter();
   const configured = isSupabaseConfiguredBrowser();
-  const [email, setEmail] = useState<string | null>(null);
+  const [account, setAccount] = useState<Account | null>(null);
   const [ready, setReady] = useState(false);
 
   useEffect(() => {
@@ -26,14 +45,14 @@ export function AuthNav() {
     const supabase = createBrowserSupabaseClient();
 
     supabase.auth.getUser().then(({ data }) => {
-      setEmail(data.user?.email ?? null);
+      setAccount(toAccount(data.user));
       setReady(true);
     });
 
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_event, session) => {
-      setEmail(session?.user?.email ?? null);
+      setAccount(toAccount(session?.user ?? null));
       setReady(true);
     });
 
@@ -42,7 +61,7 @@ export function AuthNav() {
 
   async function handleSignOut() {
     await createBrowserSupabaseClient().auth.signOut();
-    setEmail(null);
+    setAccount(null);
     router.push("/");
     router.refresh();
   }
@@ -50,7 +69,7 @@ export function AuthNav() {
   // Hidden in dev/mock mode, and until the first session check resolves (no flicker).
   if (!configured || !ready) return null;
 
-  if (!email) {
+  if (!account) {
     return (
       <Link
         href={SIGN_IN_PATH}
@@ -64,10 +83,10 @@ export function AuthNav() {
   return (
     <div className="flex items-center gap-3">
       <span
-        title={email}
+        title={account.email}
         className="hidden max-w-[12rem] truncate font-mono text-xs text-bone-dim sm:inline"
       >
-        {email}
+        {account.label}
       </span>
       <button
         type="button"
