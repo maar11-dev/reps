@@ -7,6 +7,12 @@ import { PlansApiError, saveCurrentPlan, updateSavedPlan } from "@/lib/api/plans
 import type { SavedPlan } from "@/lib/db/types";
 import { initialPlansState, usePlansStore } from "@/lib/store/plans-store";
 
+const { pushMock } = vi.hoisted(() => ({ pushMock: vi.fn() }));
+
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: pushMock, refresh: vi.fn() }),
+}));
+
 // vi.mock is hoisted above the imports by Vitest, so the bridge is mocked even
 // though it is imported with the others. PlansApiError is kept real for instanceof.
 vi.mock("@/lib/api/plans", async (importActual) => {
@@ -62,6 +68,7 @@ const saved = (id: string): SavedPlan => ({
 
 beforeEach(() => {
   usePlansStore.setState(initialPlansState);
+  pushMock.mockReset();
   vi.mocked(saveCurrentPlan).mockReset();
   vi.mocked(updateSavedPlan).mockReset();
 });
@@ -115,5 +122,17 @@ describe("SavePlanButton", () => {
     await user.click(screen.getByRole("button", { name: /save plan/i }));
 
     expect(await screen.findByRole("alert")).toHaveTextContent("Server boom");
+  });
+
+  it("redirects to sign-in when saving returns 401 (no session)", async () => {
+    const user = userEvent.setup();
+    usePlansStore.setState({ draft: PLAN, draftSavedId: null, isDirty: false });
+    vi.mocked(saveCurrentPlan).mockRejectedValue(new PlansApiError("Not authenticated.", 401));
+
+    render(<SavePlanButton />);
+    await user.click(screen.getByRole("button", { name: /save plan/i }));
+
+    await vi.waitFor(() => expect(pushMock).toHaveBeenCalledWith("/sign-in?redirectTo=/build"));
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
   });
 });

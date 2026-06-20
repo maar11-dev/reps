@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AuthNav } from "@/components/auth/AuthNav";
 import { APP_NAME } from "@/lib/constants";
 
 export function SiteHeader() {
@@ -24,6 +25,7 @@ export function SiteHeader() {
           >
             Build a plan →
           </Link>
+          <AuthNav />
         </nav>
       </div>
     </header>

@@ -1,8 +1,10 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/Button";
 import { PlansApiError, saveCurrentPlan, updateSavedPlan } from "@/lib/api/plans";
+import { SIGN_IN_PATH } from "@/lib/auth/routes";
 import { usePlansStore } from "@/lib/store/plans-store";
 
 /**
@@ -15,6 +17,7 @@ import { usePlansStore } from "@/lib/store/plans-store";
  * outcome; errors surface in an `alert`. Renders nothing without a draft.
  */
 export function SavePlanButton() {
+  const router = useRouter();
   const draft = usePlansStore((s) => s.draft);
   const draftSavedId = usePlansStore((s) => s.draftSavedId);
   const isDirty = usePlansStore((s) => s.isDirty);
@@ -42,6 +45,11 @@ export function SavePlanButton() {
       markSaved(saved);
       setJustSaved(true);
     } catch (err) {
+      // No session → send the user to sign in, then back to the builder to retry.
+      if (err instanceof PlansApiError && err.status === 401) {
+        router.push(`${SIGN_IN_PATH}?redirectTo=/build`);
+        return;
+      }
       setError(err instanceof PlansApiError ? err.message : "Couldn't save your plan. Try again.");
     } finally {
       setIsSaving(false);

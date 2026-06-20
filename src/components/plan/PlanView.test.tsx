@@ -1,7 +1,13 @@
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { PlanView } from "@/components/plan/PlanView";
+
+// PlanView renders SavePlanButton, which calls useRouter.
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn(), refresh: vi.fn() }),
+}));
+
 import type { WorkoutPlan } from "@/lib/ai/schema";
 import { NON_MEDICAL_DISCLAIMER } from "@/lib/constants";
 
