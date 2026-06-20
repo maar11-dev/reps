@@ -17,9 +17,16 @@ export const DEV_USER_ID = "00000000-0000-0000-0000-000000000000";
 export async function getCurrentUserId(): Promise<string | null> {
   if (!isSupabaseConfigured()) return DEV_USER_ID;
 
-  const client = await createSupabaseServerClient();
-  const {
-    data: { user },
-  } = await client.auth.getUser();
-  return user?.id ?? null;
+  // Resolve the session defensively: a misconfigured/unreachable Supabase must
+  // surface as "not authenticated" (a clean 401), never as an unhandled 500.
+  try {
+    const client = await createSupabaseServerClient();
+    const {
+      data: { user },
+    } = await client.auth.getUser();
+    return user?.id ?? null;
+  } catch (error) {
+    console.error("[auth] could not resolve the current user:", error);
+    return null;
+  }
 }
