@@ -50,17 +50,23 @@ export default function BuildPage() {
         ) : (
           <div className="flex flex-col gap-10">
             <div className="flex flex-col gap-4">
-              <span className="kicker w-fit border-2 border-volt bg-volt/10 px-3 py-1.5 text-volt">
+              <span className="kicker rise w-fit border-2 border-volt bg-volt/10 px-3 py-1.5 text-volt [animation-delay:40ms]">
                 Plan builder
               </span>
-              <h1 className="display text-5xl text-bone sm:text-7xl">
+              <h1 className="display rise text-5xl text-bone [animation-delay:120ms] sm:text-7xl">
                 Let&apos;s build your <span className="text-volt">week.</span>
               </h1>
-              <p className="max-w-xl text-bone-dim">
+              <p className="rise max-w-xl text-bone-dim [animation-delay:200ms]">
                 Four quick choices and Reps drafts a structured program you can train from today.
               </p>
             </div>
-            <BuilderForm onSubmit={handleSubmit} isSubmitting={isSubmitting} submitError={error} />
+            <div className="rise [animation-delay:300ms]">
+              <BuilderForm
+                onSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
+                submitError={error}
+              />
+            </div>
           </div>
         )}
       </main>

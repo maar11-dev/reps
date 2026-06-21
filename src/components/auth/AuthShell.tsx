@@ -22,13 +22,17 @@ export function AuthShell({
       <SiteHeader />
       <main className="mx-auto flex max-w-md flex-col gap-7 px-5 py-16 sm:px-8 sm:py-24">
         <div className="flex flex-col gap-3">
-          <span className="kicker w-fit border-2 border-volt bg-volt/10 px-3 py-1.5 text-volt">
+          <span className="kicker rise w-fit border-2 border-volt bg-volt/10 px-3 py-1.5 text-volt [animation-delay:40ms]">
             {kicker}
           </span>
-          <h1 className="display text-5xl text-bone sm:text-6xl">{title}</h1>
-          {subtitle ? <p className="text-bone-dim">{subtitle}</p> : null}
+          <h1 className="display rise text-5xl text-bone [animation-delay:120ms] sm:text-6xl">
+            {title}
+          </h1>
+          {subtitle ? (
+            <p className="rise text-bone-dim [animation-delay:200ms]">{subtitle}</p>
+          ) : null}
         </div>
-        <div className="border-2 border-line bg-surface/40 p-6 shadow-[8px_8px_0_0_var(--color-line)] sm:p-7">
+        <div className="rise border-2 border-line bg-surface/40 p-6 shadow-[8px_8px_0_0_var(--color-line)] [animation-delay:280ms] sm:p-7">
           {children}
         </div>
       </main>

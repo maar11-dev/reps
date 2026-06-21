@@ -5,6 +5,7 @@ import { DayCard } from "@/components/plan/DayCard";
 import { Disclaimer } from "@/components/plan/Disclaimer";
 import { ProgressionPanel } from "@/components/plan/ProgressionPanel";
 import { SavePlanButton } from "@/components/plan/SavePlanButton";
+import { Reveal } from "@/components/Reveal";
 import { Button } from "@/components/ui/Button";
 import { GeneratePlanError, requestSwap } from "@/lib/ai/api";
 import { GOAL_LABELS, LEVEL_LABELS } from "@/lib/ai/labels";
@@ -127,7 +128,7 @@ export function PlanView({ plan, onReset }: PlanViewProps) {
     <div className="flex flex-col gap-12">
       {/* Header */}
       <header className="flex flex-col gap-5">
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="rise flex flex-wrap items-center justify-between gap-4 [animation-delay:40ms]">
           <div className="flex flex-wrap items-center gap-2">
             <Tag>{GOAL_LABELS[current.goal]}</Tag>
             <Tag>{LEVEL_LABELS[current.experienceLevel]}</Tag>
@@ -147,10 +148,14 @@ export function PlanView({ plan, onReset }: PlanViewProps) {
             <SavePlanButton />
           </div>
         </div>
-        <h1 className="display text-5xl text-bone sm:text-7xl">{current.title}</h1>
-        <p className="max-w-2xl text-lg text-bone-dim">{current.summary}</p>
+        <h1 className="display rise text-5xl text-bone [animation-delay:120ms] sm:text-7xl">
+          {current.title}
+        </h1>
+        <p className="rise max-w-2xl text-lg text-bone-dim [animation-delay:200ms]">
+          {current.summary}
+        </p>
 
-        <div className="max-w-2xl border-2 border-volt bg-surface px-5 py-4 shadow-[6px_6px_0_0_var(--color-volt)]">
+        <div className="rise max-w-2xl border-2 border-volt bg-surface px-5 py-4 shadow-[6px_6px_0_0_var(--color-volt)] [animation-delay:280ms]">
           <p className="kicker text-volt mb-2">The strategy</p>
           <p className="text-sm leading-relaxed text-bone">{current.rationale}</p>
         </div>
@@ -166,7 +171,7 @@ export function PlanView({ plan, onReset }: PlanViewProps) {
       </header>
 
       {/* Day tabs */}
-      <div className="flex flex-col gap-8">
+      <div className="rise flex flex-col gap-8 [animation-delay:360ms]">
         <div
           role="tablist"
           aria-label="Training days"
@@ -211,13 +216,17 @@ export function PlanView({ plan, onReset }: PlanViewProps) {
           // biome-ignore lint/a11y/noNoninteractiveTabindex: ARIA tabpanel is focusable per the APG tabs pattern
           tabIndex={0}
         >
-          <DayCard day={activeDay} onSwap={handleSwap} swappingKey={swappingKey} />
+          <DayCard key={active} day={activeDay} onSwap={handleSwap} swappingKey={swappingKey} />
         </div>
       </div>
 
-      <ProgressionPanel progression={current.progression} />
+      <Reveal>
+        <ProgressionPanel progression={current.progression} />
+      </Reveal>
 
-      <Disclaimer />
+      <Reveal>
+        <Disclaimer />
+      </Reveal>
 
       {onReset ? (
         <div>

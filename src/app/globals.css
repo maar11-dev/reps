@@ -134,6 +134,37 @@
       rgba(244, 244, 236, 0.03) 4px
     );
   }
+
+  /* Live status dot — slow electric pulse with an expanding volt halo. */
+  .reps-pulse {
+    animation: reps-pulse 1.9s ease-in-out infinite;
+  }
+
+  /* Neon "power-on" flicker for volt accents. Pair with [animation-delay:Nms]. */
+  .reps-flicker {
+    animation: reps-flicker 0.9s steps(1, end) both;
+  }
+
+  /* Ambient float for the hero illustration — gives the mark a heartbeat. */
+  .reps-drift {
+    animation: reps-drift 9s ease-in-out infinite;
+  }
+
+  /* Scroll-driven reveal: a brutalist top-to-bottom "print" wipe as it enters
+     view. Transform-free on purpose so elements can still react to :hover. */
+  /* JS-driven scroll reveal (IntersectionObserver via <Reveal>) — lift + fade.
+     Works in every browser and only fires once the element is truly in view. */
+  .reveal-up {
+    opacity: 0;
+    transform: translateY(32px);
+    transition:
+      opacity 0.7s cubic-bezier(0.2, 0.7, 0.2, 1),
+      transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+  .reveal-up[data-shown="true"] {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes reps-rise {
@@ -156,12 +187,64 @@
   }
 }
 
+@keyframes reps-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 0 rgba(216, 255, 46, 0.55);
+  }
+  50% {
+    opacity: 0.45;
+    box-shadow: 0 0 0 5px rgba(216, 255, 46, 0);
+  }
+}
+
+@keyframes reps-flicker {
+  0% {
+    opacity: 0.25;
+  }
+  10% {
+    opacity: 1;
+  }
+  14% {
+    opacity: 0.4;
+  }
+  22% {
+    opacity: 1;
+  }
+  28% {
+    opacity: 0.7;
+  }
+  34% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes reps-drift {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-12px);
+  }
+}
+
+
 @media (prefers-reduced-motion: reduce) {
   .rise,
   [class*="reps-"] {
     animation: none !important;
   }
   .press {
+    transition: none;
+  }
+  .reveal-up {
+    opacity: 1;
+    transform: none;
     transition: none;
   }
   html {

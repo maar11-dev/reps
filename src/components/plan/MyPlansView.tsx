@@ -23,6 +23,17 @@ interface MyPlansViewProps {
 
 type LoadState = "loading" | "ready" | "error";
 
+/** Literal stagger delays (Tailwind JIT needs them spelled out, not interpolated). */
+const STAGGER = [
+  "[animation-delay:0ms]",
+  "[animation-delay:70ms]",
+  "[animation-delay:140ms]",
+  "[animation-delay:210ms]",
+  "[animation-delay:280ms]",
+  "[animation-delay:350ms]",
+] as const;
+const stagger = (i: number) => STAGGER[Math.min(i, STAGGER.length - 1)];
+
 export function MyPlansView({ onOpen }: MyPlansViewProps) {
   const savedPlans = usePlansStore((s) => s.savedPlans);
   const setSavedPlans = usePlansStore((s) => s.setSavedPlans);
@@ -80,7 +91,7 @@ export function MyPlansView({ onOpen }: MyPlansViewProps) {
 
   if (savedPlans.length === 0) {
     return (
-      <div className="flex flex-col items-start gap-4 rounded-[var(--radius-sharp)] border-2 border-dashed border-line bg-surface/50 p-10">
+      <div className="rise flex flex-col items-start gap-4 rounded-[var(--radius-sharp)] border-2 border-dashed border-line bg-surface/50 p-10">
         <p className="display text-2xl text-bone">You haven&apos;t saved any plans yet.</p>
         <Link
           href="/build"
@@ -101,13 +112,16 @@ export function MyPlansView({ onOpen }: MyPlansViewProps) {
       ) : null}
 
       <ul className="flex flex-col gap-3">
-        {savedPlans.map((saved) => {
+        {savedPlans.map((saved, i) => {
           const confirming = confirmingId === saved.id;
           const deleting = deletingId === saved.id;
           return (
             <li
               key={saved.id}
-              className="flex flex-col gap-4 rounded-[var(--radius-sharp)] border-2 border-line bg-surface p-5 transition-colors hover:border-volt sm:flex-row sm:items-center sm:justify-between"
+              className={cn(
+                "rise flex flex-col gap-4 rounded-[var(--radius-sharp)] border-2 border-line bg-surface p-5 transition-colors hover:border-volt sm:flex-row sm:items-center sm:justify-between",
+                stagger(i),
+              )}
             >
               <div className="flex flex-col gap-2">
                 <h2 className="display text-2xl text-bone">{saved.plan.title}</h2>

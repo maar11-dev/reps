@@ -2,6 +2,19 @@ import { formatRest } from "@/lib/ai/labels";
 import type { Exercise, WorkoutDay } from "@/lib/ai/schema";
 import { cn } from "@/lib/utils";
 
+/** Literal stagger delays (Tailwind JIT needs them spelled out, not interpolated). */
+const STAGGER = [
+  "[animation-delay:0ms]",
+  "[animation-delay:60ms]",
+  "[animation-delay:120ms]",
+  "[animation-delay:180ms]",
+  "[animation-delay:240ms]",
+  "[animation-delay:300ms]",
+  "[animation-delay:360ms]",
+  "[animation-delay:420ms]",
+] as const;
+const stagger = (i: number) => STAGGER[Math.min(i, STAGGER.length - 1)];
+
 interface DayCardProps {
   day: WorkoutDay;
   /** When provided, each exercise shows a "Swap" control. `position` is 0-based. */
@@ -68,7 +81,12 @@ interface ExerciseRowProps {
 
 function ExerciseRow({ exercise, index, onSwap, isSwapping }: ExerciseRowProps) {
   return (
-    <li className="flex flex-col gap-3 py-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6">
+    <li
+      className={cn(
+        "rise flex flex-col gap-3 py-4 sm:flex-row sm:items-start sm:justify-between sm:gap-6",
+        stagger(index - 1),
+      )}
+    >
       <div className="flex gap-4">
         <span className="display tabular text-2xl text-line leading-none" aria-hidden="true">
           {String(index).padStart(2, "0")}

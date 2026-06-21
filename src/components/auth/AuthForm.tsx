@@ -81,7 +81,7 @@ export function AuthForm({ mode, redirectTo }: AuthFormProps) {
     return (
       <div
         role="status"
-        className="flex flex-col gap-3 rounded-[var(--radius-sharp)] border-2 border-volt bg-volt/[0.04] p-6"
+        className="rise flex flex-col gap-3 rounded-[var(--radius-sharp)] border-2 border-volt bg-volt/[0.04] p-6"
       >
         <p className="kicker text-volt">Almost there</p>
         <p className="text-bone">
