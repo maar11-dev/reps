@@ -33,8 +33,23 @@ export default function HomePage() {
       <SiteHeader />
       <main className="mx-auto max-w-6xl px-5 sm:px-8">
         {/* Hero */}
-        <section className="grid items-center gap-10 pt-12 pb-12 sm:pt-16 lg:grid-cols-[1.1fr_0.9fr] lg:gap-12">
-          <div className="flex flex-col gap-6">
+        <section className="relative pt-12 pb-12 sm:pt-16">
+          {/* Crowned-barbell — recolored into a volt duotone so it reads as an intentional brand illustration */}
+          <div
+            className="rise pointer-events-none absolute -z-10 bottom-1 right-[-20%] w-[82vw] opacity-40 [animation-delay:360ms] sm:bottom-auto sm:top-1/2 sm:w-[min(76vw,700px)] sm:-translate-y-1/2 sm:right-[-14%] sm:opacity-60 lg:right-[-8%]"
+            aria-hidden="true"
+          >
+            <Image
+              src="/barra.png"
+              alt=""
+              width={626}
+              height={351}
+              priority
+              className="h-auto w-full max-w-none -rotate-3 [filter:grayscale(1)_sepia(1)_hue-rotate(35deg)_saturate(4)_brightness(1.05)_contrast(1.05)] [mask-image:radial-gradient(ellipse_at_center,#000_30%,transparent_72%)]"
+            />
+          </div>
+
+          <div className="relative flex max-w-xl flex-col gap-6">
             <span className="rise inline-flex w-fit items-center gap-2 border-2 border-volt bg-volt/10 px-3 py-1.5 font-mono text-xs uppercase tracking-[0.2em] text-volt [animation-delay:40ms]">
               <span className="h-2 w-2 bg-volt" aria-hidden="true" />
               AI strength &amp; conditioning
@@ -42,10 +57,13 @@ export default function HomePage() {
 
             <h1 className="display rise text-bone [animation-delay:120ms] text-[clamp(2.75rem,6vw,5rem)]">
               Train with a{" "}
-              <span className="inline-block -rotate-1 border-2 border-volt-ink bg-volt px-2 text-volt-ink">
-                plan
+              <span className="whitespace-nowrap">
+                <span className="inline-block -rotate-1 border-2 border-volt-ink bg-volt px-2 text-volt-ink">
+                  plan
+                </span>
+                ,
               </span>
-              ,<br />
+              <br />
               not a <span className="text-volt">guess.</span>
             </h1>
 
@@ -64,20 +82,6 @@ export default function HomePage() {
               <span className="font-mono text-xs uppercase tracking-[0.2em] text-bone-dim">
                 No sign-up · ~10 seconds
               </span>
-            </div>
-          </div>
-
-          {/* Crowned-barbell sticker — framed so its light bg reads as intentional */}
-          <div className="rise flex justify-center lg:justify-end [animation-delay:360ms]">
-            <div className="rotate-2 border-2 border-volt-ink bg-bone p-2 shadow-[10px_10px_0_0_var(--color-volt)]">
-              <Image
-                src="/barra.jpg"
-                alt="Illustration of a barbell wearing a crown"
-                width={626}
-                height={351}
-                priority
-                className="h-auto w-full max-w-sm sm:max-w-md"
-              />
             </div>
           </div>
         </section>
@@ -145,7 +149,15 @@ export default function HomePage() {
       </main>
 
       <footer className="border-t-2 border-line">
-        <div className="mx-auto max-w-6xl px-5 py-8 sm:px-8">
+        <div className="mx-auto flex max-w-6xl items-start gap-4 px-5 py-8 sm:px-8">
+          <Image
+            src="/logo.png"
+            alt=""
+            aria-hidden="true"
+            width={512}
+            height={512}
+            className="h-6 w-6 shrink-0 border-2 border-line object-cover"
+          />
           <p className="font-mono text-xs leading-relaxed text-bone-dim">
             Reps gives general fitness suggestions, not medical advice. Consult a professional
             before starting any program.
